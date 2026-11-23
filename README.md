@@ -9,6 +9,8 @@ Es una **plantilla**: puedes usarla para publicar tus propias rutas (botón
 **cifradas**: sin nuestra contraseña solo se ven datos ilegibles. Cuando proceses
 las tuyas, las nuestras desaparecen solas.
 
+Uso del día a día: [INSTRUCCIONES.md](INSTRUCCIONES.md) · Cambios: [CHANGELOG.md](CHANGELOG.md)
+
 - Web estática (HTML + JavaScript), sin servidor: se publica gratis en GitHub Pages.
 - Mapas con [MapLibre GL](https://maplibre.org/) y [MapTiler](https://www.maptiler.com/).
 - Un script de Python lee los archivos del reloj (FIT del export de Garmin y GPX),
