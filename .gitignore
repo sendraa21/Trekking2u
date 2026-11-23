@@ -1,0 +1,18 @@
+# Entorno de Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Datos privados: originales del reloj y cachés locales.
+# Solo se publica lo que hay en docs/ (ya simplificado).
+data/raw/
+data/entrada/
+data/procesadas/
+data/estado.json
+
+# Contraseña de la web y credenciales (p. ej. futura descarga desde Garmin Connect)
+.env
+
+# Ajustes locales del editor / asistente
+.claude/

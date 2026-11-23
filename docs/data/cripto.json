@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "kdf": "PBKDF2-SHA256",
+  "iteraciones": 310000,
+  "sal": "kYDoao9A1P667DZpD2Icrw==",
+  "prueba": {
+    "v": 1,
+    "iv": "xgH0ybc/0DMudQ2S",
+    "datos": "Hjxwpl3ld6aHdEsIp54ZWGL9CqimD5WFw5I="
+  }
+}

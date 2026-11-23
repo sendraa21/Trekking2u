@@ -1,0 +1,5 @@
+# Dependencias de Trekking2u (se instalan dentro de .venv)
+fitdecode==0.10.0   # lectura de archivos FIT de Garmin
+tzdata==2025.2      # zonas horarias (Windows no las trae de serie)
+cryptography==44.0.2  # cifrado de los datos publicados con contraseña
+pytest==8.3.5       # tests

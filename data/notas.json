@@ -1,0 +1,5 @@
+{
+  "_ayuda": "Aquí escribimos nosotros. 'rutas' usa el id de cada ruta (lo ves en la web o en docs/data/rutas.json). Campos: nombre, descripcion, tipo (senderismo | navegacion | trail | otro), ocultar (true/false). 'incluir_archivos': nombres de archivos FIT que el filtro descartó pero queremos ver. Tras editar, ejecuta 'regenerar' (o 'procesar' si tocaste incluir_archivos).",
+  "rutas": {},
+  "incluir_archivos": []
+}

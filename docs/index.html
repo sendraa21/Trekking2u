@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Trekking2u</title>
+  <meta name="description" content="Las rutas de senderismo que hacemos juntos.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js" defer></script>
+  <script src="config.js" defer></script>
+  <script type="module" src="js/inicio.js"></script>
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenedor cabecera-fila">
+      <a class="marca-sitio" href="./" aria-label="Trekking2u, inicio">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M2 26 11.5 10l5.2 8.6L21 12l9 14Z"/></svg>
+        <span>Trekking<b>2u</b></span>
+      </a>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <section class="intro">
+      <h1 data-lema>Las rutas que hacemos juntos</h1>
+    </section>
+
+    <section class="resumen" aria-labelledby="totales-titulo">
+      <h2 id="totales-titulo" class="seccion-titulo">Juntos</h2>
+      <div id="totales" class="totales"></div>
+    </section>
+
+    <nav class="filtros" aria-label="Filtrar rutas">
+      <div id="filtro-anio" class="chips" role="group" aria-label="Año"></div>
+      <div id="filtro-tipo" class="chips" role="group" aria-label="Tipo de ruta" hidden></div>
+    </nav>
+
+    <div class="principal">
+      <section class="bloque-mapa" aria-label="Mapa con todas las rutas">
+        <div id="mapa" class="mapa mapa-inicio"></div>
+        <ul id="leyenda" class="leyenda" hidden></ul>
+      </section>
+      <section class="bloque-lista" aria-label="Listado de rutas">
+        <div id="lista" class="lista"><p class="vacio">Cargando rutas…</p></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor"><p data-firma>Una idea de Gema, hecha entre los dos.</p></div>
+  </footer>
+</body>
+</html>

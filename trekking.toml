@@ -1,0 +1,47 @@
+# Configuración de Trekking2u
+# Cambia aquí los ajustes sin tocar el código. Tras cambiar algo de
+# [calculo] o [clasificacion], ejecuta:  procesar --todo
+
+zona_horaria = "Europe/Madrid"
+
+[clasificacion]
+# Palabras que identifican cada tipo de ruta. Se buscan en el deporte que
+# guarda el reloj (p. ej. "hiking", "running/trail"), en el nombre del
+# perfil de actividad ("Navegar") y en el nombre de la ruta.
+# El orden importa: gana el primer tipo que coincida.
+trail      = ["trail", "trail_running", "carrera por montaña"]
+senderismo = ["hiking", "mountaineering", "senderismo", "montañismo"]
+navegacion = ["navigate", "navegar", "navegación"]
+
+# Los FIT que no encajan en ningún tipo se descartan (en el export de Garmin
+# hay de todo: ciclismo, gimnasio...). Los GPX que pones tú a mano se
+# incluyen siempre; si no encajan, quedan como tipo "otro".
+
+[nombres]
+# Garmin nombra las actividades "<Lugar> <Actividad>". Quitamos esa
+# coletilla para que quede solo el lugar: "Collado Navegar" -> "Collado".
+quitar_sufijos = ["Navegar", "Navigate", "Senderismo", "Hiking", "Montañismo",
+                  "Trail Running", "Carrera por montaña", "Trail"]
+
+[calculo]
+umbral_desnivel_m = 3            # ignora subidas/bajadas menores (ruido)
+velocidad_min_movimiento_ms = 0.3  # por debajo, se considera parado
+velocidad_min_vertical_ms = 0.05   # ...salvo que se esté subiendo/bajando
+duplicado_margen_s = 120         # misma hora de inicio = misma actividad
+
+[simplificacion]
+tolerancia_ruta_m = 5            # detalle del trazado en la ficha de ruta
+tolerancia_mapa_general_m = 25   # detalle en el mapa con todas las rutas
+max_puntos_perfil = 400          # puntos del perfil de elevación
+
+[privacidad]
+# Publicar los datos cifrados con contraseña (se pone con: python -m trekking clave).
+# Si es true y falta la contraseña, no se publica nada. Con false, los datos
+# se publican en claro y cualquiera puede verlos.
+requiere_contrasena = true
+
+# Recorta el principio y el final del trazado publicado (p. ej. para no
+# mostrar desde dónde salimos). Las métricas se calculan con la ruta entera.
+recorte_inicio_m = 0
+recorte_fin_m = 0
+mostrar_fc = true

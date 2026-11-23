@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ruta · Trekking2u</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js" defer></script>
+  <script src="config.js" defer></script>
+  <script type="module" src="js/ruta.js"></script>
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenedor cabecera-fila">
+      <a class="marca-sitio" href="./" aria-label="Trekking2u, inicio">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M2 26 11.5 10l5.2 8.6L21 12l9 14Z"/></svg>
+        <span>Trekking<b>2u</b></span>
+      </a>
+      <a class="volver" href="./">← Todas las rutas</a>
+    </div>
+  </header>
+
+  <main id="ficha" class="contenedor ficha">
+    <section class="ficha-cabecera">
+      <h1 id="titulo">Cargando…</h1>
+      <p id="meta" class="meta"></p>
+      <p id="descripcion" class="descripcion" hidden></p>
+    </section>
+
+    <section class="bloque-mapa" aria-label="Mapa de la ruta">
+      <div class="mapa-envoltorio">
+        <div id="mapa" class="mapa mapa-ruta"></div>
+        <div class="mapa-botones">
+          <button id="boton-3d" type="button" class="boton" aria-pressed="false">Ver en 3D</button>
+          <button id="boton-satelite" type="button" class="boton" aria-pressed="false">Satélite</button>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="datos-titulo">
+      <h2 id="datos-titulo" class="seccion-titulo">Datos</h2>
+      <div id="datos" class="datos"></div>
+    </section>
+
+    <section aria-labelledby="perfil-titulo">
+      <h2 id="perfil-titulo" class="seccion-titulo">Perfil de elevación</h2>
+      <div class="tarjeta-plana">
+        <div id="perfil" class="perfil"></div>
+      </div>
+    </section>
+
+    <nav id="vecinas" class="vecinas" aria-label="Otras rutas"></nav>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor"><p data-firma>Una idea de Gema, hecha entre los dos.</p></div>
+  </footer>
+</body>
+</html>
