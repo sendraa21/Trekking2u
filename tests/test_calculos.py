@@ -19,6 +19,28 @@ def test_simplificar_conserva_esquina():
     assert 49 in geo.simplificar(xy, 1.0)
 
 
+def test_semicirculos_cerca_del_meridiano_cero():
+    from trekking.lectores import _grados
+    # -0.00001° son unos -119 semicírculos; antes se confundían con grados
+    assert _grados(-119) == pytest.approx(-0.00001, abs=1e-7)
+    assert _grados(42 * 2**31 / 180) == pytest.approx(42.0)
+    assert _grados(90) == pytest.approx(90 * 180 / 2**31)
+
+
+def test_filtrar_saltos_quita_picos_y_acepta_recolocaciones():
+    t0 = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    tiempos = [t0 + timedelta(seconds=5 * i) for i in range(8)]
+    lat0, paso = 42.6, 0.00004  # ~4,5 m cada 5 s
+    lats = [lat0 + paso * i for i in range(8)]
+    lons = [0.0] * 8
+    lats[3] += 0.002  # pico de ~220 m
+    assert geo.filtrar_saltos(lats, lons, tiempos, v_max=8) == [0, 1, 2, 4, 5, 6, 7]
+    # Si el GPS se queda "lejos" muchos puntos seguidos, se acepta la nueva posición
+    lats2 = [lat0, lat0] + [lat0 + 0.01] * 6
+    # (descarta 2, 3 y 4; al cuarto seguido lo da por bueno)
+    assert geo.filtrar_saltos(lats2, lons, tiempos, v_max=8, max_seguidos=3) == [0, 1, 5, 6, 7]
+
+
 def test_remuestrear_interpola():
     filas = geo.remuestrear([0.0, 100.0], [[10.0, 20.0]], 25.0)
     assert [f[0] for f in filas] == [0, 25, 50, 75, 100]

@@ -21,6 +21,7 @@ DEFECTOS: dict = {
         "velocidad_min_movimiento_ms": 0.3,
         "velocidad_min_vertical_ms": 0.05,
         "duplicado_margen_s": 120,
+        "velocidad_max_gps_ms": 8.0,
     },
     "simplificacion": {
         "tolerancia_ruta_m": 5.0,

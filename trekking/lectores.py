@@ -103,10 +103,12 @@ _SEMICIRCULO = 180.0 / 2**31
 
 
 def _grados(v) -> float | None:
-    if v is None:
-        return None
-    v = float(v)
-    return v * _SEMICIRCULO if abs(v) > 180 else v
+    """Semicírculos (unidad de posición de los FIT) a grados.
+
+    Siempre se convierte: cerca del meridiano 0 o del ecuador los valores en
+    semicírculos son pequeños y no se pueden distinguir de grados por su tamaño.
+    """
+    return None if v is None else float(v) * _SEMICIRCULO
 
 
 def _valor(frame, nombre: str):

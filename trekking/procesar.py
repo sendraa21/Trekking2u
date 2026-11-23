@@ -24,7 +24,7 @@ from .lectores import EXTENSIONES, leer
 from .modelo import Actividad, Descartada
 
 # Súbelo cuando cambie la forma de calcular algo: obliga a reprocesar todo.
-VERSION_PROCESADO = 2  # 2: tiempo en movimiento con distancias GPS sin escalar
+VERSION_PROCESADO = 3  # 2: movimiento con distancias GPS sin escalar; 3: FIT cerca del meridiano 0 y saltos de GPS
 
 TIPOS = ("trail", "senderismo", "navegacion")  # orden de prioridad al clasificar
 CAMPOS_PRIVADOS = ("nombre_original", "tipo_original", "origen")
@@ -108,6 +108,11 @@ def limpiar_nombre(nombre: str, sufijos: list[str]) -> str:
 
 def construir_ruta(act: Actividad, tipo: str, cfg: Config) -> dict:
     pts = act.puntos
+    buenos = geo.filtrar_saltos([p.lat for p in pts], [p.lon for p in pts], [p.t for p in pts],
+                                float(cfg["calculo"]["velocidad_max_gps_ms"]))
+    pts = [pts[i] for i in buenos]
+    if len(pts) < 2:
+        raise Descartada("el GPS no tiene puntos válidos")
     lats = [p.lat for p in pts]
     lons = [p.lon for p in pts]
     eles = [p.ele for p in pts]

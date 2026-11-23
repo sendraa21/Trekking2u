@@ -28,6 +28,7 @@ umbral_desnivel_m = 3            # ignora subidas/bajadas menores (ruido)
 velocidad_min_movimiento_ms = 0.3  # por debajo, se considera parado
 velocidad_min_vertical_ms = 0.05   # ...salvo que se esté subiendo/bajando
 duplicado_margen_s = 120         # misma hora de inicio = misma actividad
+velocidad_max_gps_ms = 8         # saltos de GPS más rápidos (29 km/h) se descartan
 
 [simplificacion]
 tolerancia_ruta_m = 5            # detalle del trazado en la ficha de ruta

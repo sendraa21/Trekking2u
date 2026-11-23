@@ -21,6 +21,32 @@ def distancias_acumuladas(lats: list[float], lons: list[float]) -> list[float]:
     return acum
 
 
+def filtrar_saltos(lats: list[float], lons: list[float], tiempos: list,
+                   v_max: float, max_seguidos: int = 30) -> list[int]:
+    """Índices de los puntos buenos, sin los saltos imposibles del GPS.
+
+    Un punto se descarta si, para llegar a él desde el último punto bueno, habría
+    que ir a más de `v_max` m/s. Si se descartan muchos seguidos, se asume que el
+    GPS se ha recolocado de verdad: se acepta el punto y se sigue desde ahí.
+    """
+    n = len(lats)
+    if n < 2 or tiempos[0] is None:
+        return list(range(n))
+    buenos, seguidos = [0], 0
+    for i in range(1, n):
+        j = buenos[-1]
+        if tiempos[i] is None or tiempos[j] is None:
+            buenos.append(i)
+            continue
+        dt = max((tiempos[i] - tiempos[j]).total_seconds(), 1.0)
+        if haversine(lats[j], lons[j], lats[i], lons[i]) / dt <= v_max or seguidos >= max_seguidos:
+            buenos.append(i)
+            seguidos = 0
+        else:
+            seguidos += 1
+    return buenos
+
+
 def proyectar(lats: list[float], lons: list[float]) -> list[tuple[float, float]]:
     """Proyección plana local en metros (suficiente para una ruta)."""
     k = math.cos(math.radians(sum(lats) / len(lats)))
