@@ -110,7 +110,16 @@ puede adivinar probando. Si prefieres publicar sin contraseña, pon
   (FIT, el mejor) o **Exportar a GPX**, y guárdalo en `data/raw/`.
 - **Todo el historial**: pídelo en
   [Garmin → Exportar datos](https://www.garmin.com/account/datamanagement/exportdata/).
-  *(El importador del ZIP aún está en desarrollo.)*
+  Cuando te llegue el ZIP, déjalo tal cual en `data/entrada/` y ejecuta
+  `publicar.bat`; o impórtalo a mano:
+
+  ```powershell
+  .venv\Scripts\python.exe -m trekking importar C:\ruta\al\export.zip
+  ```
+
+  Solo se copian a `data/raw/garmin/` las actividades de montaña, con su
+  nombre real de Garmin. Puedes volver a importar un export nuevo: lo que ya
+  estaba no se duplica.
 
 Los FIT se filtran por tipo de actividad: entran senderismo, montañismo, trail
 running y el modo «Navegar» del reloj. Los GPX que pongas a mano entran siempre.
@@ -163,6 +172,7 @@ Tu web quedará en `https://TU_USUARIO.github.io/mis-rutas/`.
 .venv\Scripts\python.exe -m trekking regenerar    # solo regenerar (tras editar notas.json)
 .venv\Scripts\python.exe -m trekking servir       # ver la web en local
 .venv\Scripts\python.exe -m trekking clave        # poner o cambiar la contraseña
+.venv\Scripts\python.exe -m trekking importar X.zip  # importar el export completo de Garmin
 .venv\Scripts\python.exe -m pytest                # tests
 ```
 
@@ -178,5 +188,4 @@ Tu web quedará en `https://TU_USUARIO.github.io/mis-rutas/`.
 
 ## Próximamente
 
-- Importar el ZIP del export completo de Garmin (con los nombres reales de las actividades).
 - Descarga automática opcional desde Garmin Connect (`trekking/fuentes/garmin_connect.py`).

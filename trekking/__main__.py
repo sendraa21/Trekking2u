@@ -6,6 +6,8 @@
     .venv\\Scripts\\python -m trekking regenerar         # solo regenerar docs/data (tras editar notas.json)
     .venv\\Scripts\\python -m trekking servir            # ver la web en local
     .venv\\Scripts\\python -m trekking clave             # poner o cambiar la contraseña de la web
+    .venv\\Scripts\\python -m trekking importar X.zip    # importar el export completo de Garmin
+                                                       # (o deja el ZIP en data\\entrada\\)
 """
 from __future__ import annotations
 
@@ -42,6 +44,20 @@ def _mostrar(inf: Informe) -> None:
         print(f"Sin cambios: {inf.sin_cambios} archivo(s) ya procesados")
     if not (inf.nuevas or inf.duplicadas or inf.descartadas or inf.eliminadas or inf.errores):
         print("No hay rutas nuevas.")
+
+
+def _mostrar_importacion(nombre: str, inf) -> None:
+    print(f"Export de Garmin {nombre}: {inf.fit_revisados} archivos FIT revisados")
+    print(f"  rutas copiadas a data/raw/garmin: {len(inf.nuevas)} nuevas, {inf.ya_estaban} ya estaban")
+    if inf.descartadas:
+        otros = ", ".join(f"{n} {t}" for t, n in inf.descartadas.most_common())
+        print(f"  no son rutas (se ignoran): {otros}")
+
+
+def _importar_pendientes(cfg: Config) -> None:
+    from .garmin_export import importar_pendientes
+    for z, inf in importar_pendientes(cfg):
+        _mostrar_importacion(z.name, inf)
 
 
 def _clave_web(cfg: Config) -> str | None:
@@ -104,6 +120,8 @@ def main(argv: list[str] | None = None) -> int:
     s = ordenes.add_parser("servir", help="abre la web en local para verla antes de publicar")
     s.add_argument("--puerto", type=int, default=8000)
     s.add_argument("--sin-navegador", action="store_true")
+    i = ordenes.add_parser("importar", help="importa el ZIP del export completo de Garmin")
+    i.add_argument("zip", help="ruta al ZIP que te envía Garmin")
     c = ordenes.add_parser("clave", help="pone o cambia la contraseña de la web")
     c.add_argument("--quitar", action="store_true", help="borra la contraseña de este PC")
     args = parser.parse_args(argv)
@@ -115,10 +133,18 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.orden == "clave":
         return _orden_clave(cfg, args.quitar)
+    if args.orden == "importar":
+        from pathlib import Path
+        from .garmin_export import importar_zip
+        print("Leyendo el export (puede tardar un par de minutos)...")
+        _mostrar_importacion(Path(args.zip).name, importar_zip(cfg, Path(args.zip)))
+        print("Ahora procesa y publica con:  publicar.bat")
+        return 0
 
     inf = None
     if args.orden in ("procesar", "publicar"):
         _clave_web(cfg)  # falla pronto si falta la contraseña
+        _importar_pendientes(cfg)
         inf = procesar(cfg, todo=getattr(args, "todo", False))
         _mostrar(inf)
     res = _regenerar(cfg)

@@ -24,7 +24,7 @@ from .lectores import EXTENSIONES, leer
 from .modelo import Actividad, Descartada
 
 # Súbelo cuando cambie la forma de calcular algo: obliga a reprocesar todo.
-VERSION_PROCESADO = 1
+VERSION_PROCESADO = 2  # 2: tiempo en movimiento con distancias GPS sin escalar
 
 TIPOS = ("trail", "senderismo", "navegacion")  # orden de prioridad al clasificar
 CAMPOS_PRIVADOS = ("nombre_original", "tipo_original", "origen")
@@ -118,6 +118,7 @@ def construir_ruta(act: Actividad, tipo: str, cfg: Config) -> dict:
     simp = cfg["simplificacion"]
 
     acum = geo.distancias_acumuladas(lats, lons)
+    acum_gps = acum  # distancias reales entre puntos: para decidir si nos movíamos
     if dev.get("distancia_m") and acum[-1] > 0:
         # Ajusta las distancias al total del reloj para que el perfil cuadre.
         factor = dev["distancia_m"] / acum[-1]
@@ -137,7 +138,7 @@ def construir_ruta(act: Actividad, tipo: str, cfg: Config) -> dict:
     fin = next((t for t in reversed(tiempos) if t), None)
     duracion = (fin - tiempos[0]).total_seconds() if tiempos[0] and fin else None
     movimiento = metricas.tiempo_movimiento(
-        tiempos, acum, eles, calc["velocidad_min_movimiento_ms"], calc["velocidad_min_vertical_ms"])
+        tiempos, acum_gps, eles, calc["velocidad_min_movimiento_ms"], calc["velocidad_min_vertical_ms"])
     fc_validas = [f for f in fcs if f]
     fc_med = dev.get("fc_media") or metricas.fc_media(tiempos, fcs)
     fc_max = dev.get("fc_max") or (max(fc_validas) if fc_validas else None)
@@ -229,12 +230,19 @@ def procesar(cfg: Config, todo: bool = False) -> Informe:
         (p for p in cfg.dir_raw.rglob("*") if p.is_file() and p.suffix.lower() in EXTENSIONES),
         key=lambda p: (p.suffix.lower() != ".fit", str(p).lower()))
 
+    from .garmin_export import metadatos_de  # import aquí: garmin_export usa este módulo
+
     vistos: set[str] = set()
+    cache_meta: dict = {}
     for ruta in encontrados:
         clave = ruta.relative_to(cfg.dir_raw).as_posix()
         vistos.add(clave)
         forzado = ruta.name.lower() in incluir
+        # Título y tipo de Garmin (FIT importados del export); si cambian, se reprocesa.
+        meta = metadatos_de(ruta, cache_meta) if ruta.suffix.lower() == ".fit" else None
         firma = huella(ruta) + ("+incluir" if forzado else "")
+        if meta:
+            firma += "+" + hashlib.sha1(json.dumps(meta, sort_keys=True).encode()).hexdigest()[:12]
         previo = archivos.get(clave)
         if previo and previo.get("firma") == firma:
             inf.sin_cambios += 1
@@ -244,6 +252,9 @@ def procesar(cfg: Config, todo: bool = False) -> Informe:
 
         try:
             act = leer(ruta)
+            if meta:
+                act.nombre = meta.get("nombre") or act.nombre
+                act.tipo_original = f"{act.tipo_original} {meta.get('tipo_garmin', '')}".strip()
             tipo = clasificar(act, cfg)
             if tipo is None:
                 if act.origen == "gpx" or forzado:
